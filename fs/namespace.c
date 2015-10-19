@@ -2567,6 +2567,7 @@ SYSCALL_DEFINE2(pivot_root, const char __user *, new_root,
 	if (!is_path_reachable(real_mount(old.mnt), old.dentry, &new))
 		goto out4;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	/* make certain new is below the root */
 	if (!is_path_reachable(new_mnt, new.dentry, &root))
 		goto out4;
@@ -2578,8 +2579,9 @@ SYSCALL_DEFINE2(pivot_root, const char __user *, new_root,
 	/* make certain new is below the root */
 	if (!is_path_reachable(new_mnt, new.dentry, &root))
 		goto out4;
+=======
+>>>>>>> 4174cb5... fix mismerge fail..
 	br_write_lock(&vfsmount_lock);
->>>>>>> fcd26e4... brlocks/lglocks: API cleanups
 	detach_mnt(new_mnt, &parent_path);
 	detach_mnt(root_mnt, &root_parent);
 	/* mount old root on put_old */
