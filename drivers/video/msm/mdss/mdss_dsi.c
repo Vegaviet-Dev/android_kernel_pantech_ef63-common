@@ -1391,49 +1391,6 @@ int dsi_panel_device_register(struct device_node *pan_node,
 		}
 	}
 
-	if (pinfo->type == MIPI_CMD_PANEL) {
-		ctrl_pdata->disp_te_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
-						"qcom,platform-te-gpio", 0);
-		if (!gpio_is_valid(ctrl_pdata->disp_te_gpio)) {
-			pr_err("%s:%d, Disp_te gpio not specified\n",
-						__func__, __LINE__);
-		}
-	}
-
-	if (gpio_is_valid(ctrl_pdata->disp_te_gpio) &&
-					pinfo->type == MIPI_CMD_PANEL) {
-		rc = gpio_request(ctrl_pdata->disp_te_gpio, "disp_te");
-		if (rc) {
-			pr_err("request TE gpio failed, rc=%d\n",
-			       rc);
-			gpio_free(ctrl_pdata->disp_te_gpio);
-			return -ENODEV;
-		}
-		rc = gpio_tlmm_config(GPIO_CFG(
-				ctrl_pdata->disp_te_gpio, 1,
-				GPIO_CFG_INPUT,
-				GPIO_CFG_PULL_DOWN,
-				GPIO_CFG_2MA),
-				GPIO_CFG_ENABLE);
-
-		if (rc) {
-			pr_err("%s: unable to config tlmm = %d\n",
-				__func__, ctrl_pdata->disp_te_gpio);
-			gpio_free(ctrl_pdata->disp_te_gpio);
-			return -ENODEV;
-		}
-
-		rc = gpio_direction_input(ctrl_pdata->disp_te_gpio);
-		if (rc) {
-			pr_err("set_direction for disp_en gpio failed, rc=%d\n",
-			       rc);
-			gpio_free(ctrl_pdata->disp_te_gpio);
-			return -ENODEV;
-		}
-		pr_debug("%s: te_gpio=%d\n", __func__,
-					ctrl_pdata->disp_te_gpio);
-	}
-
 #else /* QUALCOMM default */
 	ctrl_pdata->disp_en_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
 		"qcom,platform-enable-gpio", 0);
@@ -1450,6 +1407,7 @@ int dsi_panel_device_register(struct device_node *pan_node,
 			return -ENODEV;
 		}
 	}
+#endif /* QUALCOMM default */
 
 	if (pinfo->type == MIPI_CMD_PANEL) {
 		ctrl_pdata->disp_te_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
@@ -1494,6 +1452,7 @@ int dsi_panel_device_register(struct device_node *pan_node,
 					ctrl_pdata->disp_te_gpio);
 	}
 
+#if !defined(CONFIG_F_SKYDISP_EF63_SS)
 	ctrl_pdata->rst_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
 			 "qcom,platform-reset-gpio", 0);
 	if (!gpio_is_valid(ctrl_pdata->rst_gpio)) {
