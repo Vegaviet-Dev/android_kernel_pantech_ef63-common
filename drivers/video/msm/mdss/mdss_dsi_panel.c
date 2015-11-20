@@ -795,7 +795,7 @@ void panel_gamma_sort(struct mdss_dsi_ctrl_pdata *pdata)
 		printk("-----------%d gamma----------------\n",gamma_level[i]);
 		for (index = 0; index< 30;) {
 			printk("R : 0x%x  G :0x%x B : 0x%x\n",pdata->gamma_set.gamma_table[i][index],pdata->gamma_set.gamma_table[i][index+1],pdata->gamma_set.gamma_table[i][index+2]);
-		index+=3;
+			index+=3;
 		}
 	}
 #endif
@@ -888,7 +888,6 @@ void mtp_read(int data,char * read_buf)
 			printk("gamma_add2_mtp[%d]\n",ctrl_pdata->panel_read_mtp.gamma_add2_mtp[RGB_B][index]);
 #endif
 	}
-
 }
 
 #ifdef CONFIG_F_SKYDISP_EF63_DRIVER_IC_CHECK
@@ -1023,14 +1022,14 @@ void mtp_read_work(struct work_struct *work)
 	if (ctrl_pdata->manufacture_id == SAMSUNG_DRIVER_IC) {
 		read_reg_chipdependency(ctrl_pdata,0x00,33);
 #ifdef CONFIG_F_SKYDISP_HBM_FOR_AMOLED
-	ctrl_pdata->onflag = false;
-	ctrl_pdata->panel_data.hbm_control = hbm_control_ddi;
-	ctrl_pdata->panel_data.acl_control = acl_control;
+		ctrl_pdata->onflag = false;
+		ctrl_pdata->panel_data.hbm_control = hbm_control_ddi;
+		ctrl_pdata->panel_data.acl_control = acl_control;
 #endif
 	} else if (ctrl_pdata->manufacture_id == MAGNA_DRIVER_IC) {
 		read_reg_chipdependency(ctrl_pdata,0x00,33);
 #ifdef CONFIG_F_SKYDISP_HBM_FOR_AMOLED
-	ctrl_pdata->panel_data.hbm_control = hbm_control_magna;
+		ctrl_pdata->panel_data.hbm_control = hbm_control_magna;
 #endif
 	} else
 		pr_err("not connected");
