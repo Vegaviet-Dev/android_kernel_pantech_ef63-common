@@ -381,28 +381,6 @@ void mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 			   __func__, __LINE__);
 		return;
 	}
-
-	pr_debug("%s: enable = %d\n", __func__, enable);
-	pinfo = &(ctrl_pdata->panel_data.panel_info);
-
-	if (enable) {
-#if 0
-		gpio_set_value((ctrl->octa_rst_gpio), 1);
-		msleep(10);
-		gpio_set_value((ctrl->octa_rst_gpio), 0);
-		msleep(10);
-		gpio_set_value((ctrl->octa_rst_gpio), 1);
-		msleep(10);
-#endif
-		if (ctrl_pdata->ctrl_state & CTRL_STATE_PANEL_INIT) {
-			pr_debug("%s: Panel Not properly turned OFF\n",
-						__func__);
-			ctrl_pdata->ctrl_state &= ~CTRL_STATE_PANEL_INIT;
-			pr_debug("%s: Reset panel done\n", __func__);
-		}
-	} else {
-		gpio_set_value((ctrl_pdata->octa_rst_gpio), 0);
-	}
 #else /* QCOM Original */
 	if (!gpio_is_valid(ctrl_pdata->disp_en_gpio)) {
 		pr_debug("%s:%d, reset line not configured\n",
@@ -414,11 +392,22 @@ void mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 			   __func__, __LINE__);
 		return;
 	}
+#endif /* QCOM Original */
 
 	pr_debug("%s: enable = %d\n", __func__, enable);
 	pinfo = &(ctrl_pdata->panel_data.panel_info);
 
 	if (enable) {
+#if defined(CONFIG_F_SKYDISP_EF63_SS)
+#if 0
+		gpio_set_value((ctrl->octa_rst_gpio), 1);
+		msleep(10);
+		gpio_set_value((ctrl->octa_rst_gpio), 0);
+		msleep(10);
+		gpio_set_value((ctrl->octa_rst_gpio), 1);
+		msleep(10);
+#endif
+#else /* QCOM Original */
 		if (gpio_is_valid(ctrl_pdata->disp_en_gpio))
 			gpio_set_value((ctrl_pdata->disp_en_gpio), 1);
 
@@ -435,6 +424,7 @@ void mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 			else if (pinfo->mode_gpio_state == MODE_GPIO_LOW)
 				gpio_set_value((ctrl_pdata->mode_gpio), 0);
 		}
+#endif /* QCOM Original */
 		if (ctrl_pdata->ctrl_state & CTRL_STATE_PANEL_INIT) {
 			pr_debug("%s: Panel Not properly turned OFF\n",
 						__func__);
@@ -442,11 +432,14 @@ void mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 			pr_debug("%s: Reset panel done\n", __func__);
 		}
 	} else {
+#if defined(CONFIG_F_SKYDISP_EF63_SS)
+		gpio_set_value((ctrl_pdata->octa_rst_gpio), 0);
+#else /* QCOM Original */
 		gpio_set_value((ctrl_pdata->rst_gpio), 0);
 		if (gpio_is_valid(ctrl_pdata->disp_en_gpio))
 			gpio_set_value((ctrl_pdata->disp_en_gpio), 0);
-	}
 #endif /* QCOM Original */
+	}
 }
 
 static char caset[] = {0x2a, 0x00, 0x00, 0x03, 0x00};	/* DTYPE_DCS_LWRITE */
