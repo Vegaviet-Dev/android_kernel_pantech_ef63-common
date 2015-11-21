@@ -1072,17 +1072,21 @@ static void mdss_dsi_panel_bl_ctrl(struct mdss_panel_data *pdata,
 							u32 bl_level)
 {
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
+#if defined(CONFIG_F_SKYDISP_EF63_SS)
 	struct msm_fb_data_type * mfd = mfdmsm_fb_get_mfd();
+#endif
 
 	if (pdata == NULL) {
 		pr_err("%s: Invalid input data\n", __func__);
 		return;
 	}
 
+#if defined(CONFIG_F_SKYDISP_EF63_SS)
 	if (!mfd->panel_power_on) {
 		printk("[%s] panel is off state (%d).....\n",__func__,mfd->panel_power_on);
 		return;
 	}
+#endif
 
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
@@ -1174,8 +1178,13 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 		ctrl->onflag = true;
 #endif
 	}
-#endif
+#endif /* F_LSI_VDDM_OFFSET_RD_WR */
+
+#if defined(CONFIG_F_SKYDISP_EF63_SS)
 	pr_err("%s:-\n", __func__);
+#else
+	pr_debug("%s:-\n", __func__);
+#endif
 	return 0;
 }
 
@@ -1205,7 +1214,11 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 #ifdef CONFIG_F_SKYDISP_HBM_FOR_AMOLED
 	//pdata->hbm_flag = 0;
 #endif
+#if defined(CONFIG_F_SKYDISP_EF63_SS)
 	pr_err("%s:-\n", __func__);
+#else
+	pr_debug("%s:-\n", __func__);
+#endif
 	return 0;
 }
 
@@ -1326,8 +1339,13 @@ static int mdss_dsi_parse_dcs_cmds(struct device_node *np,
 	else
 		pcmds->link_state = DSI_LP_MODE;
 
+#if defined(CONFIG_F_SKYDISP_EF63_SS)
 	pr_err("%s: dcs_cmd=%x len=%d, cmd_cnt=%d link_state=%d\n", __func__,
 		pcmds->buf[0], pcmds->blen, pcmds->cmd_cnt, pcmds->link_state);
+#else
+	pr_debug("%s: dcs_cmd=%x len=%d, cmd_cnt=%d link_state=%d\n", __func__,
+		pcmds->buf[0], pcmds->blen, pcmds->cmd_cnt, pcmds->link_state);
+#endif
 
 	return 0;
 

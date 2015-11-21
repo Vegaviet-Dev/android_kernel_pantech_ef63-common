@@ -384,11 +384,13 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 
 	pinfo = &pdata->panel_info;
 
+#if defined(CONFIG_F_SKYDISP_EF63_SS)
 	ret = mdss_dsi_panel_power_on(pdata, 1);
 	if (ret) {
 		pr_err("%s: Panel power on failed\n", __func__);
 		return ret;
 	}
+#endif
 
 	ret = msm_dss_enable_vreg(ctrl_pdata->power_data.vreg_config,
 				ctrl_pdata->power_data.num_vreg, 1);
