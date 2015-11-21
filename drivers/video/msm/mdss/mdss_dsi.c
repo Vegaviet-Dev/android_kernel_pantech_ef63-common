@@ -786,15 +786,16 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 							pdata);
 #ifdef CONFIG_F_SKYDISP_MAGNAIC_OPERATING_BEFORE_TP20
 		if (ctrl_pdata->on_cmds.link_state == DSI_LP_MODE || ctrl_pdata->magnaic_on_cmds.link_state == DSI_LP_MODE) {
-#else
-		if (ctrl_pdata->on_cmds.link_state == DSI_LP_MODE) {
-#endif
 #ifdef CONFIG_F_SKYDISP_SILENT_BOOT
 			if (pdata->silent_backlight  == true)
 				break;
 #endif
 			rc = mdss_dsi_unblank(pdata);
 		}
+#else
+		if (ctrl_pdata->on_cmds.link_state == DSI_LP_MODE)
+			rc = mdss_dsi_unblank(pdata);
+#endif
 		break;
 	case MDSS_EVENT_PANEL_ON:
 		ctrl_pdata->ctrl_state |= CTRL_STATE_MDP_ACTIVE;
