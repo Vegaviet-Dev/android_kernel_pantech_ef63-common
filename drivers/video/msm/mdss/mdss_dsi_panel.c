@@ -1153,23 +1153,26 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 
 #ifdef CONFIG_F_SKYDISP_CMDS_CONTROL
 	if (ctrl->lcd_cmds_check == false) {
-#endif
-
-		if (ctrl->on_cmds.cmd_cnt) {
 #ifdef F_SKYDISP_MAGNAIC_OPERATING_BEFORE_TP20
+		if (ctrl->on_cmds.cmd_cnt) {
 			if (ctrl->manufacture_id == MAGNA_DRIVER_IC)
 				mdss_dsi_panel_cmds_send(ctrl, &ctrl->magnaic_on_cmds);
 			else
-#endif
-			mdss_dsi_panel_cmds_send(ctrl, &ctrl->on_cmds);
+				mdss_dsi_panel_cmds_send(ctrl, &ctrl->on_cmds);
 		}
-#ifdef CONFIG_F_SKYDISP_CMDS_CONTROL
+#else
+		if (ctrl->on_cmds.cmd_cnt)
+			mdss_dsi_panel_cmds_send(ctrl, &ctrl->on_cmds);
+#endif /* F_SKYDISP_MAGNAIC_OPERATING_BEFORE_TP20 */
 	} else if (ctrl->lcd_cmds_check == true) {
 		if (ctrl->on_cmds_user.cmd_cnt)
 			mdss_dsi_panel_cmds_send(ctrl, &ctrl->on_cmds_user);
 		pr_info("user LCD on cmds---------------->\n");
 	}
-#endif
+#else /* QCOM Original */
+	if (ctrl->on_cmds.cmd_cnt)
+		mdss_dsi_panel_cmds_send(ctrl, &ctrl->on_cmds);
+#endif /* CONFIG_F_SKYDISP_CMDS_CONTROL */
 
 #ifdef F_LSI_VDDM_OFFSET_RD_WR
 	if (ctrl->manufacture_id == SAMSUNG_DRIVER_IC) {
