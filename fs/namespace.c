@@ -1078,7 +1078,6 @@ void umount_tree(struct mount *mnt, int propagate, struct list_head *kill)
 		list_del_init(&p->mnt_list);
 		__touch_mnt_namespace(p->mnt_ns);
 		p->mnt_ns = NULL;
-		__mnt_make_shortterm(p);
 		list_del_init(&p->mnt_child);
 		if (mnt_has_parent(p)) {
 			p->mnt_parent->mnt_ghosts++;
@@ -1711,13 +1710,7 @@ static int do_remount(struct path *path, int flags, int mnt_flags,
 	else
 		err = do_remount_sb(sb, flags, data, 0);
 	if (!err) {
-<<<<<<< HEAD
-		br_write_lock(vfsmount_lock);
-		mnt_flags |= mnt->mnt.mnt_flags & ~MNT_USER_SETTABLE_MASK;
-=======
 		br_write_lock(&vfsmount_lock);
-		mnt_flags |= mnt->mnt.mnt_flags & MNT_PROPAGATION_MASK;
->>>>>>> 568cfbe... brlocks/lglocks: API cleanups
 		mnt->mnt.mnt_flags = mnt_flags;
 		br_write_unlock(&vfsmount_lock);
 	}
@@ -2566,21 +2559,7 @@ SYSCALL_DEFINE2(pivot_root, const char __user *, new_root,
 	/* make sure we can reach put_old from new_root */
 	if (!is_path_reachable(real_mount(old.mnt), old.dentry, &new))
 		goto out4;
-<<<<<<< HEAD
-<<<<<<< HEAD
-	/* make certain new is below the root */
-	if (!is_path_reachable(new_mnt, new.dentry, &root))
-		goto out4;
-=======
-<<<<<<< HEAD
->>>>>>> 568cfbe... brlocks/lglocks: API cleanups
-	br_write_lock(vfsmount_lock);
-=======
-	/* make certain new is below the root */
-	if (!is_path_reachable(new_mnt, new.dentry, &root))
-		goto out4;
-=======
->>>>>>> 4174cb5... fix mismerge fail..
+
 	br_write_lock(&vfsmount_lock);
 	detach_mnt(new_mnt, &parent_path);
 	detach_mnt(root_mnt, &root_parent);
