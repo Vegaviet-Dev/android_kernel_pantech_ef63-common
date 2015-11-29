@@ -98,13 +98,10 @@ DEFINE_PER_CPU(struct avc_cache_stats, avc_cache_stats) = { 0 };
 static struct avc_cache avc_cache;
 static struct avc_callback_node *avc_callbacks;
 static struct kmem_cache *avc_node_cachep;
-<<<<<<< HEAD
-
-=======
 static struct kmem_cache *avc_operation_decision_node_cachep;
 static struct kmem_cache *avc_operation_node_cachep;
 static struct kmem_cache *avc_operation_perm_cachep;
->>>>>>> 4cb7caf6939a21a95dcd750d50efc6c25ddd3792
+
 #ifdef CONFIG_PANTECH_SELINUX_DENIAL_LOG //P11536-SHPARK-SELinux 
 static struct pantech_avc_format pantech_avc;
 struct pantech_avc_format pantech_get_avc(void)
